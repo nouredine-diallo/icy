@@ -1,0 +1,13 @@
+# secrets
+.env
+*.pem
+.dev.vars
+
+# outils
+node_modules/
+.wrangler/
+dist/
+
+# divers
+.DS_Store
+*.log

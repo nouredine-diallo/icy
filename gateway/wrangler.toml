@@ -1,0 +1,8 @@
+name = "icy-gateway"
+main = "src/index.js"
+compatibility_date = "2026-08-01"
+
+# Secrets (never committed): set via `wrangler secret put <NAME>`
+#   ICY_GITHUB_TOKEN   -- fine-grained PAT scoped ONLY to nouredine-diallo/icy
+#                         (Contents: write, Actions: write) -- see ../TODO_MANUEL.md #4
+#   ICY_SHARED_SECRET  -- shared secret the PWA/phone must present in x-icy-secret
