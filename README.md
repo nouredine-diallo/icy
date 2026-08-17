@@ -1,8 +1,28 @@
 # ICY — ce que c'est, et en quoi ça diffère de JARVIS
 
-ICY est un second projet, dans `/home/land/JARVIS/ICY/`, indépendant du moteur OpenJarvis existant.
-Le guide de construction de référence est [`GUIDE_ATELIER.md`](./GUIDE_ATELIER.md) (déplacé ici tel quel,
-non modifié) — c'est le document à suivre phase par phase pour tout développement futur d'ICY.
+ICY est un second projet, dans `/home/land/JARVIS/ICY/` et sur `github.com/nouredine-diallo/icy`
+(dépôt indépendant, public), séparé du moteur OpenJarvis existant.
+
+## Documents
+
+| Fichier | Contenu | Statut |
+|---|---|---|
+| [`GUIDE_ATELIER.md`](./GUIDE_ATELIER.md) | Plan de référence v1.0 — principes, modèle de données, loop graph, prompts, 7 phases | figé, ne pas modifier |
+| [`GUIDE_ATELIER_ADDENDUM_1.md`](./GUIDE_ATELIER_ADDENDUM_1.md) | 6 classes de demandes (BUILD/RESEARCH/DIAGNOSE/REVIEW/OPS/ASK), capacité de recherche, preuve du code | figé |
+| [`GUIDE_ATELIER_ADDENDUM_2.md`](./GUIDE_ATELIER_ADDENDUM_2.md) | Modèles et routage — état du marché août 2026, table de routage Phase 4, 7 mécanismes anti-latence | figé, à appliquer en Phase 4 |
+| [`TODO_MANUEL.md`](./TODO_MANUEL.md) | Actions qui nécessitent ton intervention (comptes, tokens) | vivant, mis à jour au fil de l'eau |
+| Ce fichier | Différence ICY/JARVIS, parcours utilisateur, état d'avancement des phases | vivant |
+
+## État d'avancement
+
+- **Phase 0 (fondations)** — fait et vérifié : repo public `icy`, permissions Actions→PR activées.
+- **Phase 1 (boucle nue)** — gateway (`icy-gateway.nourredinediallo.workers.dev`) et PWA Console
+  (`icy-app.pages.dev`) déployés et vérifiés en HTTP réel. Il manque deux actions manuelles pour le
+  critère de fin (notification Telegram + déclenchement PAT scopé) — voir `TODO_MANUEL.md` #3 et #4.
+  Le reste de la plomberie (déclenchement → fichier → PR) est déjà prouvé par une vraie PR ouverte.
+- **Phases 2 à 7** — pas commencées. L'addendum 2 fige déjà les choix de modèles/routage pour la
+  Phase 4, à construire une fois la Phase 3 validée (règle du guide : jamais une phase avant que la
+  précédente ne soit vraiment terminée).
 
 ## La différence de fond avec JARVIS
 
