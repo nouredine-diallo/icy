@@ -23,11 +23,19 @@ jobs:
     runs-on: ubuntu-latest
     timeout-minutes: 5
     steps:
+      # Le PAT (pas le GITHUB_TOKEN par defaut) est utilise ici expres :
+      # GitHub n'enchaine jamais un workflow sur un evenement pull_request
+      # produit par le GITHUB_TOKEN par defaut (protection anti-boucle
+      # native, verifiee en conditions reelles -- voir TODO_MANUEL.md #4).
+      # Avec le PAT, la PR ouverte redevient capable de declencher verify.yml.
       - uses: actions/checkout@v4
+        with:
+          token: ${{ secrets.ICY_PAT }}
 
       - name: Ecrire la preuve et ouvrir la PR
+        id: pr
         env:
-          GH_TOKEN: ${{ github.token }}
+          GH_TOKEN: ${{ secrets.ICY_PAT }}
           MESSAGE: ${{ github.event.inputs.message || github.event.client_payload.message || 'repository_dispatch' }}
           TRIGGER: ${{ github.event_name }}
         run: |
@@ -53,8 +61,26 @@ jobs:
           git commit -m "boot: preuve de boucle ${STAMP}"
           git push origin "$BRANCH"
 
-          gh pr create \
+          PR_URL=$(gh pr create \
             --title "ICY bootstrap: preuve de boucle ${STAMP}" \
             --body "Ouverte automatiquement par le workflow bootstrap (declencheur: ${TRIGGER}). Valide le critere de fin de Phase 0 du GUIDE_ATELIER.md : un declenchement ecrit un fichier et ouvre une PR." \
             --base main \
-            --head "$BRANCH"
+            --head "$BRANCH")
+
+          echo "pr_url=${PR_URL}" >> "$GITHUB_OUTPUT"
+          echo "message=${MESSAGE}" >> "$GITHUB_OUTPUT"
+
+      - name: Notifier sur Telegram
+        env:
+          BOT_TOKEN: ${{ secrets.TELEGRAM_BOT_TOKEN }}
+          CHAT_ID: ${{ secrets.TELEGRAM_CHAT_ID }}
+          PR_URL: ${{ steps.pr.outputs.pr_url }}
+          MESSAGE: ${{ steps.pr.outputs.message }}
+        run: |
+          set -euo pipefail
+          TEXT="ICY -- boucle terminee.
+          Declenchement : ${MESSAGE}
+          PR : ${PR_URL}"
+          curl -s -X POST "https://api.telegram.org/bot${BOT_TOKEN}/sendMessage" \
+            --data-urlencode "chat_id=${CHAT_ID}" \
+            --data-urlencode "text=${TEXT}"
