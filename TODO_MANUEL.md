@@ -32,6 +32,13 @@ actions. Coche au fur et à mesure ; dis-moi quand c'est fait ou donne-moi direc
   sur `icy` depuis ton téléphone, sans passer par le PC.
 - Vérification que je ferai avant de l'utiliser : test contre un autre de tes repos (doit renvoyer 404,
   sinon le scope est trop large — même méthode que pour le PAT du projet LBS plus tôt dans ce projet).
+- **Deuxième raison, trouvée en testant `verify.yml` (Phase 2, amorce) :** GitHub n'enchaîne jamais un
+  workflow sur un événement `pull_request`/`push` produit par le `GITHUB_TOKEN` par défaut — protection
+  anti-boucle native de la plateforme, vérifié en conditions réelles (la PR #2 ouverte par `bootstrap.yml`
+  n'a déclenché aucun run de `verify.yml`, conclusion `action_required`, 0 job). Tant que `bootstrap.yml`
+  utilise `github.token` pour committer/ouvrir la PR, aucune vérification automatique ne pourra tourner
+  dessus. Le PAT scopé réglera aussi ça : dès qu'il remplace `github.token` dans `bootstrap.yml`, les PR
+  qu'il ouvre redeviennent capables de déclencher `verify.yml` normalement.
 
 ---
 
