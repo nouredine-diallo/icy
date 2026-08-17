@@ -1,0 +1,33 @@
+name: ICY verify (amorce Phase 2, sur le code d'ICY lui-meme)
+
+# Preuve machine minimale sur le code d'ICY, pas encore le VERIFY generique
+# pour un projet cible (ca c'est la vraie Phase 2 du guide). Tant qu'il n'y
+# a rien de plus a verifier, la syntaxe JS est le seul niveau pertinent :
+# pas de build step, pas de tests encore ecrits.
+
+on:
+  pull_request:
+  push:
+    branches: [main]
+
+jobs:
+  syntax:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+      - name: Verifier la syntaxe de chaque fichier JS
+        run: |
+          set -euo pipefail
+          status=0
+          for f in $(find gateway app -name '*.js'); do
+            echo "-- $f --"
+            node --check "$f" || status=1
+          done
+          exit $status
+
+      - name: Verifier que manifest.json est du JSON valide
+        run: node -e "JSON.parse(require('fs').readFileSync('app/manifest.json','utf8')); console.log('manifest.json OK')"
