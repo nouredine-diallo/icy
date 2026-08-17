@@ -1,0 +1,60 @@
+name: ICY bootstrap loop (Phase 0)
+
+# Boucle la plus nue possible, zero LLM : un declenchement (telephone ou
+# CLI) ecrit un fichier et ouvre une PR. C'est tout le critere de fin de
+# Phase 0 du GUIDE_ATELIER.md -- rien de plus n'est ajoute ici.
+
+on:
+  workflow_dispatch:
+    inputs:
+      message:
+        description: "Message libre a inscrire dans le fichier de preuve"
+        required: false
+        default: "test manuel"
+  repository_dispatch:
+    types: [icy_bootstrap_test]
+
+permissions:
+  contents: write
+  pull-requests: write
+
+jobs:
+  ping:
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Ecrire la preuve et ouvrir la PR
+        env:
+          GH_TOKEN: ${{ github.token }}
+          MESSAGE: ${{ github.event.inputs.message || github.event.client_payload.message || 'repository_dispatch' }}
+          TRIGGER: ${{ github.event_name }}
+        run: |
+          set -euo pipefail
+          git config user.name "icy-bootstrap"
+          git config user.email "icy-bootstrap@users.noreply.github.com"
+
+          STAMP=$(date -u +%Y%m%d-%H%M%S)
+          BRANCH="boot-${STAMP}"
+          FILE="bootstrap/ping-${STAMP}.md"
+
+          git checkout -b "$BRANCH"
+          mkdir -p bootstrap
+          cat > "$FILE" <<EOF
+          # Preuve de boucle -- ${STAMP}
+
+          - Declencheur : ${TRIGGER}
+          - Message     : ${MESSAGE}
+          - Commit run  : ${GITHUB_RUN_ID}
+          EOF
+
+          git add "$FILE"
+          git commit -m "boot: preuve de boucle ${STAMP}"
+          git push origin "$BRANCH"
+
+          gh pr create \
+            --title "ICY bootstrap: preuve de boucle ${STAMP}" \
+            --body "Ouverte automatiquement par le workflow bootstrap (declencheur: ${TRIGGER}). Valide le critere de fin de Phase 0 du GUIDE_ATELIER.md : un declenchement ecrit un fichier et ouvre une PR." \
+            --base main \
+            --head "$BRANCH"
