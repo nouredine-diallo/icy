@@ -7,25 +7,31 @@ ICY est un second projet, dans `/home/land/JARVIS/ICY/` et sur `github.com/noure
 
 | Fichier | Contenu | Statut |
 |---|---|---|
-| [`GUIDE_ATELIER_V2.md`](./GUIDE_ATELIER_V2.md) | **Canonique depuis le 2026-08-17.** ICY = superviseur qui délègue le code (OpenHands/Copilot agent), négocie (Claude), refuse sans preuve, se souvient de 2 types seulement | vivant — la cible actuelle |
+| [`GUIDE_ATELIER_V2.md`](./GUIDE_ATELIER_V2.md) | **Canonique depuis le 2026-08-17.** Audit complet (faits sourcés / hypothèses / marketing séparés) + version finale : ICY = superviseur qui délègue à OpenHands/agent Copilot, adopte Spec Kit + AGENTS.md + LiteLLM au lieu de les réécrire, garde le rouge-avant-vert comme seul vrai différenciateur. Plan semaine par semaine en §E.6 | vivant — la cible actuelle |
 | [`GUIDE_ATELIER.md`](./GUIDE_ATELIER.md) | Plan v1.0 — harnais complet avec ses propres nœuds EDIT/DIAGNOSE et sa table de routage. **Historique.** Ce qui en survit tel quel est listé dans v2 §4/§5 | superseded, conservé pour référence |
-| [`GUIDE_ATELIER_ADDENDUM_1.md`](./GUIDE_ATELIER_ADDENDUM_1.md) | 6 classes de demandes (BUILD/RESEARCH/DIAGNOSE/REVIEW/OPS/ASK), capacité de recherche, preuve du code | **toujours valable** sous v2 (voir v2 §5, dernier point) |
-| [`GUIDE_ATELIER_ADDENDUM_2.md`](./GUIDE_ATELIER_ADDENDUM_2.md) | Modèles et routage — état du marché août 2026 | **partiellement superseded** : la table de routage EDIT/DIAGNOSE multi-fournisseurs devient inutile (OpenHands/Copilot gèrent leur propre inférence) ; le §4 sur Claude Pro reste valable, repris en v2 §4.3 |
+| [`GUIDE_ATELIER_ADDENDUM_1.md`](./GUIDE_ATELIER_ADDENDUM_1.md) | 6 classes de demandes (BUILD/RESEARCH/DIAGNOSE/REVIEW/OPS/ASK), capacité de recherche, preuve du code | classification et rouge-avant-vert toujours valables ; non contredit par v2 (pas mentionné explicitement dedans, mais compatible) |
+| [`GUIDE_ATELIER_ADDENDUM_2.md`](./GUIDE_ATELIER_ADDENDUM_2.md) | Modèles et routage — état du marché août 2026 | **superseded pour le routage** : v2 tranche "adopte LiteLLM, n'écris pas de routeur" (§B.1, §C, §E.1 point 9) — la table multi-fournisseurs maison ne sera pas construite. Le §4 (Claude Pro, pools séparés) reste factuellement valable et corrobore v2 §A.1 |
 | [`TODO_MANUEL.md`](./TODO_MANUEL.md) | Actions qui nécessitent ton intervention (comptes, tokens) | vivant, mis à jour au fil de l'eau |
 | Ce fichier | Différence ICY/JARVIS, parcours utilisateur, état d'avancement | vivant |
 
-## État d'avancement
+## État d'avancement (par rapport au plan §E.6 de `GUIDE_ATELIER_V2.md`)
 
-- **Semaine 0 (v2, prescrite avant tout code)** — pas encore faite : tester l'agent Copilot mobile et
-  OpenHands seuls sur de vraies étapes, pour confirmer que le superviseur est réellement nécessaire.
-- **Substrat déjà construit (Phase 0/1 de v1.0, entièrement réutilisable sous v2 — voir v2 §4.1)** :
-  repo public `icy`, gateway (`icy-gateway.nourredinediallo.workers.dev`), PWA Console
-  (`icy-app.pages.dev`), boucle déclenchement→fichier→PR vérifiée en conditions réelles, amorce de
-  vérification (`verify.yml`). PAT scopé reçu et vérifié (restreint au seul repo `icy`) mais il manque le
-  scope Pull Requests pour que la délégation puisse ouvrir des PR — voir `TODO_MANUEL.md` #4.
-- **Les 4 sous-systèmes de v2 (§4)** — pas commencés : la porte de vérification (extension de ce qui
-  existe déjà), la délégation vers OpenHands/agent Copilot, la négociation (`ARCHITECT` via Claude, sortie
-  Spec Kit), la mémoire à 2 types. Ordre de construction détaillé dans `GUIDE_ATELIER_V2.md` §4.
+**Honnêteté d'abord : l'ordre prescrit par le document n'a pas été respecté.** Sa Semaine 0 dit
+explicitement "ne code rien" avant d'avoir mesuré l'agent Copilot + OpenHands seuls sur de vraies issues.
+Le gateway, la PWA et la boucle bootstrap ont été construits *avant* cette mesure (héritage de la v1.0,
+quand le plan était encore "harnais complet dès la Phase 0"). Ce n'est pas perdu — tout est gratuit et
+réutilisable, voir ci-dessous — mais ce n'était pas le bon ordre selon le document lui-même.
+
+- **Semaine 0 (mesure — prescrite en premier, pas encore faite)** : candidater au Student Pack, utiliser
+  l'agent Copilot depuis GitHub Mobile sur de vraies issues Coss by Micky, noter ce qui manque et les
+  crédits consommés. **Rien à coder ici.**
+- **Ce qui existe déjà et recouvre des morceaux des Semaines 1/2/4** : repo public `icy`, gateway
+  (`icy-gateway.nourredinediallo.workers.dev`), PWA Console (`icy-app.pages.dev`), boucle
+  déclenchement→fichier→PR vérifiée en conditions réelles, amorce de vérification (`verify.yml` — pas
+  encore le vrai rouge-avant-vert de la Semaine 2). PAT scopé reçu et vérifié (restreint au seul repo
+  `icy`) mais il manque le scope Pull Requests — voir `TODO_MANUEL.md` #4.
+- **Semaines 1 à 6+** : pas commencées. Détail complet, avec critères "terminé quand" par semaine, dans
+  `GUIDE_ATELIER_V2.md` §E.6.
 
 ## La différence de fond avec JARVIS
 
