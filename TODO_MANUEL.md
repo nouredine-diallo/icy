@@ -24,10 +24,23 @@ actions. Coche au fur et à mesure ; dis-moi quand c'est fait ou donne-moi direc
 - Une fois créé : donne-moi le token (et si tu veux réutiliser le bot JARVIS existant plutôt qu'en
   créer un nouveau, dis-le — plus simple mais mélange les notifications des deux projets).
 
-## 4. PAT fine-grained scopé au repo `icy` — bloquant pour finir la Phase 1
-- Où : https://github.com/settings/personal-access-tokens/new
+## 4. PAT fine-grained scopé au repo `icy` — reçu, mais il manque un scope
+- **Statut : reçu et vérifié le 2026-08-17** — bien restreint au seul repo `icy` (testé : 404 sur LBS,
+  jarvis-control-plane, jarvis-artifacts — tous privés ; 200 sur JARVIS mais c'est normal, ce repo est
+  public donc lisible par n'importe qui, pas une preuve de fuite).
+- **Mais** : `Contents: Read and write` + `Actions: Read and write` ne suffisent pas pour ouvrir une PR.
+  Testé en conditions réelles le 2026-08-17 17:00 : `gh pr create` échoue avec
+  `Resource not accessible by personal access token (createPullRequest)`. Il manque le scope
+  **Pull requests: Read and write**.
+- **Action requise :** retourne sur https://github.com/settings/personal-access-tokens, ouvre le token
+  `icy-gateway`, ajoute la permission **Pull requests → Read and write**, sauvegarde. Si l'édition en
+  place n'est pas proposée par l'interface, régénère le token avec ce scope en plus et renvoie-moi la
+  nouvelle valeur (l'ancienne sera remplacée partout où elle est stockée : Cloudflare + secret GitHub
+  `ICY_PAT`).
+- Où (si nouveau token) : https://github.com/settings/personal-access-tokens/new
 - Réglages : **Repository access → Only select repositories → icy** (uniquement celui-là) ;
-  Permissions → **Contents: Read and write**, **Actions: Read and write**.
+  Permissions → **Contents: Read and write**, **Actions: Read and write**, **Pull requests: Read and
+  write**.
 - Pourquoi : c'est ce qui permet au Gateway (Cloudflare Worker) de déclencher `repository_dispatch`
   sur `icy` depuis ton téléphone, sans passer par le PC.
 - Vérification que je ferai avant de l'utiliser : test contre un autre de tes repos (doit renvoyer 404,

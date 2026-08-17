@@ -7,22 +7,25 @@ ICY est un second projet, dans `/home/land/JARVIS/ICY/` et sur `github.com/noure
 
 | Fichier | Contenu | Statut |
 |---|---|---|
-| [`GUIDE_ATELIER.md`](./GUIDE_ATELIER.md) | Plan de référence v1.0 — principes, modèle de données, loop graph, prompts, 7 phases | figé, ne pas modifier |
-| [`GUIDE_ATELIER_ADDENDUM_1.md`](./GUIDE_ATELIER_ADDENDUM_1.md) | 6 classes de demandes (BUILD/RESEARCH/DIAGNOSE/REVIEW/OPS/ASK), capacité de recherche, preuve du code | figé |
-| [`GUIDE_ATELIER_ADDENDUM_2.md`](./GUIDE_ATELIER_ADDENDUM_2.md) | Modèles et routage — état du marché août 2026, table de routage Phase 4, 7 mécanismes anti-latence | figé, à appliquer en Phase 4 |
+| [`GUIDE_ATELIER_V2.md`](./GUIDE_ATELIER_V2.md) | **Canonique depuis le 2026-08-17.** ICY = superviseur qui délègue le code (OpenHands/Copilot agent), négocie (Claude), refuse sans preuve, se souvient de 2 types seulement | vivant — la cible actuelle |
+| [`GUIDE_ATELIER.md`](./GUIDE_ATELIER.md) | Plan v1.0 — harnais complet avec ses propres nœuds EDIT/DIAGNOSE et sa table de routage. **Historique.** Ce qui en survit tel quel est listé dans v2 §4/§5 | superseded, conservé pour référence |
+| [`GUIDE_ATELIER_ADDENDUM_1.md`](./GUIDE_ATELIER_ADDENDUM_1.md) | 6 classes de demandes (BUILD/RESEARCH/DIAGNOSE/REVIEW/OPS/ASK), capacité de recherche, preuve du code | **toujours valable** sous v2 (voir v2 §5, dernier point) |
+| [`GUIDE_ATELIER_ADDENDUM_2.md`](./GUIDE_ATELIER_ADDENDUM_2.md) | Modèles et routage — état du marché août 2026 | **partiellement superseded** : la table de routage EDIT/DIAGNOSE multi-fournisseurs devient inutile (OpenHands/Copilot gèrent leur propre inférence) ; le §4 sur Claude Pro reste valable, repris en v2 §4.3 |
 | [`TODO_MANUEL.md`](./TODO_MANUEL.md) | Actions qui nécessitent ton intervention (comptes, tokens) | vivant, mis à jour au fil de l'eau |
-| Ce fichier | Différence ICY/JARVIS, parcours utilisateur, état d'avancement des phases | vivant |
+| Ce fichier | Différence ICY/JARVIS, parcours utilisateur, état d'avancement | vivant |
 
 ## État d'avancement
 
-- **Phase 0 (fondations)** — fait et vérifié : repo public `icy`, permissions Actions→PR activées.
-- **Phase 1 (boucle nue)** — gateway (`icy-gateway.nourredinediallo.workers.dev`) et PWA Console
-  (`icy-app.pages.dev`) déployés et vérifiés en HTTP réel. Il manque deux actions manuelles pour le
-  critère de fin (notification Telegram + déclenchement PAT scopé) — voir `TODO_MANUEL.md` #3 et #4.
-  Le reste de la plomberie (déclenchement → fichier → PR) est déjà prouvé par une vraie PR ouverte.
-- **Phases 2 à 7** — pas commencées. L'addendum 2 fige déjà les choix de modèles/routage pour la
-  Phase 4, à construire une fois la Phase 3 validée (règle du guide : jamais une phase avant que la
-  précédente ne soit vraiment terminée).
+- **Semaine 0 (v2, prescrite avant tout code)** — pas encore faite : tester l'agent Copilot mobile et
+  OpenHands seuls sur de vraies étapes, pour confirmer que le superviseur est réellement nécessaire.
+- **Substrat déjà construit (Phase 0/1 de v1.0, entièrement réutilisable sous v2 — voir v2 §4.1)** :
+  repo public `icy`, gateway (`icy-gateway.nourredinediallo.workers.dev`), PWA Console
+  (`icy-app.pages.dev`), boucle déclenchement→fichier→PR vérifiée en conditions réelles, amorce de
+  vérification (`verify.yml`). PAT scopé reçu et vérifié (restreint au seul repo `icy`) mais il manque le
+  scope Pull Requests pour que la délégation puisse ouvrir des PR — voir `TODO_MANUEL.md` #4.
+- **Les 4 sous-systèmes de v2 (§4)** — pas commencés : la porte de vérification (extension de ce qui
+  existe déjà), la délégation vers OpenHands/agent Copilot, la négociation (`ARCHITECT` via Claude, sortie
+  Spec Kit), la mémoire à 2 types. Ordre de construction détaillé dans `GUIDE_ATELIER_V2.md` §4.
 
 ## La différence de fond avec JARVIS
 
@@ -75,15 +78,18 @@ formule "un modèle qui écrit du JSON et on croise les doigts" ne peut pas gara
 4. **Preview.** Dès que le build est vert, une preview Cloudflare par branche est déjà chaude. Tu l'ouvres en
    plein écran sur le téléphone, tu annotes du doigt un défaut visuel, l'annotation repart directement comme
    instruction d'affinage — pas besoin de la reformuler en texte.
-5. **Mémoire.** À la clôture de la mission — jamais pendant — ICY propose d'ajouter des entrées : un FAIT
-   vérifié dans le repo, une DÉCISION que tu as prise explicitement, une RÈGLE que tu as énoncée. Tu vois
-   la source et la confiance de chaque entrée, et tu peux *Confirmer* / *Corriger* / *Oublier* chacune.
-   Aucune n'entre en mémoire sans être passée par cet écran.
+5. **Mémoire.** À la clôture de la mission — jamais pendant — ICY propose d'ajouter des entrées. **Sous
+   v2 (voir `GUIDE_ATELIER_V2.md` §4.4), seulement deux types** : une DÉCISION que tu as prise
+   explicitement, une RÈGLE que tu as énoncée — plus de FAIT/PRÉFÉRENCE/HYPOTHÈSE. Tu vois la source de
+   chaque entrée et tu peux *Confirmer* / *Corriger* / *Oublier* chacune. Aucune n'entre en mémoire sans
+   être passée par cet écran.
 
 Un bouton **STOP** reste visible en permanence en haut à droite sur les cinq écrans. À tout moment, ça coupe
 tout, sans dépendre du bon vouloir du modèle en cours d'exécution.
 
-**Ce que ce parcours suppose déjà construit** : les phases 0 à 2 du guide (fondations, boucle nue sans LLM,
-vérificateur + preuves) doivent être vertes avant qu'un seul nœud LLM ne soit branché (phase 3) — c'est
-l'ordre de construction, pas l'ordre d'usage final. Rien n'a encore été codé pour ICY à ce stade ; ce dossier
-contient uniquement le guide et ce document de cadrage, en attente du feu vert pour démarrer la Phase 0.
+**Ce que ce parcours suppose déjà construit** : la porte de vérification et la boucle
+déclenchement→PR (v2 §4.1, substrat v1.0 Phase 0/1 déjà en place — voir "État d'avancement" plus haut),
+avant que la délégation (OpenHands/Copilot) et la négociation (`ARCHITECT`) ne soient branchées. L'étape 4
+"Preview" change de sens sous v2 : l'annotation part vers l'exécuteur délégué (pas vers un nœud `EDIT`
+maison), et il n'y a plus de `REVIEW` par modèle multimodal — seulement l'œil de l'utilisateur, ce qui
+est déjà ce que cette étape décrivait. Voir `GUIDE_ATELIER_V2.md` pour l'architecture cible complète.
