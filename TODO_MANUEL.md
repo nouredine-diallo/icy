@@ -35,6 +35,18 @@ actions. Coche au fur et à mesure ; dis-moi quand c'est fait ou donne-moi direc
 
 ---
 
+## Déployé et vérifié (Phase 1)
+- Gateway : https://icy-gateway.nourredinediallo.workers.dev (`/health` → 200, `/dispatch` → 401 sans
+  bon secret, 503 tant que le point 4 n'est pas fait — comportement voulu).
+- PWA Console : https://icy-app.pages.dev (ouvre-la sur ton téléphone, ajoute-la à l'écran d'accueil pour
+  l'effet app).
+- Dans la PWA, ouvre "Configuration du gateway" et renseigne l'URL ci-dessus et le secret partagé.
+  **Le secret n'est jamais écrit ici : ce repo est public.** Il est dans `ICY/.env` en local
+  (gitignoré) — récupère-le avec `grep ICY_SHARED_SECRET /home/land/JARVIS/ICY/.env`, ou demande-le-moi
+  dans le chat.
+
+---
+
 **Déjà fait, pas d'action nécessaire :** compte Cloudflare (réutilisé, `CLOUDFLARE_API_TOKEN` déjà dans
 `.env`, revérifié fonctionnel avec Node 22) ; compte GitHub (déjà authentifié, `gh` a les scopes
 `repo`+`workflow`) ; VM Oracle (abandonnée le 2026-08-12, non pertinente ici).
